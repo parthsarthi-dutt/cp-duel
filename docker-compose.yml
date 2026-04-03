@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: cp_duel_pg
+    environment:
+      POSTGRES_USER: cp_duel_user
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: cp_duel
+    ports:
+      - "5532:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  pgdata:
