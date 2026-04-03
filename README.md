@@ -1,6 +1,5 @@
 # ⚔ CP Duel — The Ultimate Competitive Programming Arena
 
-![CP Duel Logo](https://raw.githubusercontent.com/lucide-react/lucide/main/icons/trophy.svg)
 
 **CP Duel** is a real-time, peer-to-peer competitive programming platform designed for speed, social interaction, and tournament-style play. Whether you're grinding for Codeforces rating or challenging friends to 1v1 blitzes, CP Duel provides the perfect environment for sharp, high-stakes coding.
 
