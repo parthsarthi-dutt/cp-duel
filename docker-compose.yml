@@ -12,6 +12,19 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  # Free Quick Tunnel for the Frontend
+  tunnel-frontend:
+    image: cloudflare/cloudflared:latest
+    container_name: cp_duel_tunnel_fe
+    restart: always
+    command: tunnel --url http://host.docker.internal:5173
+
+  # Free Quick Tunnel for the Backend
+  tunnel-backend:
+    image: cloudflare/cloudflared:latest
+    container_name: cp_duel_tunnel_be
+    restart: always
+    command: tunnel --url http://host.docker.internal:3000
 
 volumes:
   pgdata:

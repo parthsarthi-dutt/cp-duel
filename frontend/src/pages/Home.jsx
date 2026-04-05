@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Swords, ShieldAlert } from 'lucide-react';
+import API_BASE_URL from '../config';
 
 export default function Home({ user, token }) {
   const [timeLimit, setTimeLimit] = useState('45');
@@ -16,7 +17,7 @@ export default function Home({ user, token }) {
     
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:3000/api/create-match', {
+      const res = await fetch(`${API_BASE_URL}/api/create-match`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ timeLimit, ratingMin, ratingMax })

@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { Clock, ExternalLink, Activity, Trophy, AlertTriangle, XOctagon, ArrowLeft } from 'lucide-react';
+import API_BASE_URL from '../config';
 
 export default function DuelRoom({ user, token }) {
   const { roomId } = useParams();
@@ -28,7 +29,7 @@ export default function DuelRoom({ user, token }) {
       Notification.requestPermission();
     }
 
-    socketRef.current = io('http://localhost:3000');
+    socketRef.current = io(API_BASE_URL);
     
     // Auto Join Room
     socketRef.current.emit('joinRoom', { roomId, userId: user.id }, (res) => {
@@ -128,7 +129,7 @@ export default function DuelRoom({ user, token }) {
 
   useEffect(() => {
     if (roomData && roomData.status === 'FINISHED') {
-        fetch(`http://localhost:3000/auth/match/${roomData.roomId}`, {
+        fetch(`${API_BASE_URL}/auth/match/${roomData.roomId}`, {
             headers: { Authorization: `Bearer ${token}` }
         })
         .then(res => res.json())
@@ -139,7 +140,7 @@ export default function DuelRoom({ user, token }) {
 
   useEffect(() => {
     if (roomData && roomData.status === 'WAITING' && token) {
-       fetch('http://localhost:3000/social/friends', {
+       fetch(`${API_BASE_URL}/social/friends`, {
          headers: { Authorization: `Bearer ${token}` }
        })
        .then(r => r.json())
@@ -149,7 +150,7 @@ export default function DuelRoom({ user, token }) {
 
   const sendInvite = async (friend) => {
     try {
-      const res = await fetch('http://localhost:3000/social/invite', {
+      const res = await fetch(`${API_BASE_URL}/social/invite`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

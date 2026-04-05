@@ -11,6 +11,7 @@ import Friends from './pages/Friends';
 import { io } from 'socket.io-client';
 import { Bell, Heart, Users, Search, UserPlus, Check, X } from 'lucide-react';
 import './index.css';
+import API_BASE_URL from './config';
 
 function NavBar({ user, invites, onAccept, onDecline }) {
   const location = useLocation();
@@ -102,7 +103,7 @@ function App() {
       setLoading(false);
       return;
     }
-    fetch('http://localhost:3000/auth/me', {
+    fetch(`${API_BASE_URL}/auth/me`, {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(res => {
@@ -114,12 +115,12 @@ function App() {
       setLoading(false);
       
       // Initialize global socket
-      const s = io('http://localhost:3000');
+      const s = io(API_BASE_URL, { transports: ['websocket', 'polling'] });
       s.emit('registerUser', { userId: data.id });
       setSocket(s);
 
       // Fetch existing invitations
-      fetch('http://localhost:3000/social/invitations', {
+      fetch(`${API_BASE_URL}/social/invitations`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(r => r.json())
@@ -149,7 +150,7 @@ function App() {
 
   const handleAcceptInvite = async (inv) => {
     try {
-      const res = await fetch(`http://localhost:3000/social/accept-invite/${inv.id}`, {
+      const res = await fetch(`${API_BASE_URL}/social/accept-invite/${inv.id}`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -159,7 +160,7 @@ function App() {
            window.location.href = `/room/${inv.target_id}`;
         } else if (inv.type === 'LEAGUE') {
            // Explicitly trigger the join logic in the league module
-           await fetch('http://localhost:3000/api/league/join', {
+           await fetch(`${API_BASE_URL}/api/league/join`, {
              method: 'POST',
              headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
              body: JSON.stringify({ leagueId: inv.target_id })
@@ -172,7 +173,7 @@ function App() {
 
   const handleDeclineInvite = async (inv) => {
     try {
-      const res = await fetch(`http://localhost:3000/social/decline-invite/${inv.id}`, {
+      const res = await fetch(`${API_BASE_URL}/social/decline-invite/${inv.id}`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` }
       });

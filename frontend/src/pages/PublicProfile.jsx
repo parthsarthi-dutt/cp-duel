@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Trophy, History as HistoryIcon, Swords, User as UserIcon } from 'lucide-react';
+import API_BASE_URL from '../config';
 
 export default function PublicProfile({ token, currentUser }) {
     const { handle } = useParams();
@@ -15,7 +16,7 @@ export default function PublicProfile({ token, currentUser }) {
         const fetchProfile = async () => {
             setLoading(true);
             try {
-                const res = await fetch(`http://localhost:3000/auth/user/${handle}`);
+                const res = await fetch(`${API_BASE_URL}/auth/user/${handle}`);
                 if (!res.ok) {
                     setError('User not found or not verified.');
                     setLoading(false);
@@ -27,7 +28,7 @@ export default function PublicProfile({ token, currentUser }) {
 
                 // Fetch H2H if it's not the current user
                 if (currentUser.cf_handle !== handle && token) {
-                    const h2hRes = await fetch(`http://localhost:3000/auth/user/${handle}/h2h`, {
+                    const h2hRes = await fetch(`${API_BASE_URL}/auth/user/${handle}/h2h`, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
                     if (h2hRes.ok) {

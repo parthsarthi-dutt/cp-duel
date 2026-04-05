@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Swords } from 'lucide-react';
+import API_BASE_URL from '../config';
 
 export default function Login({ setToken, setUser }) {
   const [email, setEmail] = useState('');
@@ -20,7 +21,7 @@ export default function Login({ setToken, setUser }) {
     if(!email) return;
     setLoading(true);
     try {
-        const res = await fetch('http://localhost:3000/auth/mock-login', {
+        const res = await fetch(`${API_BASE_URL}/auth/mock-login`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ email })
@@ -57,9 +58,7 @@ export default function Login({ setToken, setUser }) {
            <button type="submit" disabled={loading}>{loading ? 'Signing in...' : 'Quick Sign In'}</button>
         </form>
 
-        <p style={{margin: '1.5rem 0 0', color: '#4b5563', fontSize:'0.8rem'}}>
-          For production, use Google OAuth instead.
-        </p>
+        
       </div>
     </div>
   );

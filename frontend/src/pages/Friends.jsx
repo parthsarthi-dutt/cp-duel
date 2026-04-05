@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Search, UserPlus, Users, ExternalLink, Send, ShieldQuestion } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../config';
 
 export default function Friends({ user, token, socket }) {
   const [query, setQuery] = useState('');
@@ -15,7 +16,7 @@ export default function Friends({ user, token, socket }) {
 
   const fetchFriends = async () => {
     try {
-      const res = await fetch('http://localhost:3000/social/friends', {
+      const res = await fetch(`${API_BASE_URL}/social/friends`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -34,7 +35,7 @@ export default function Friends({ user, token, socket }) {
     }
 
     try {
-      const res = await fetch(`http://localhost:3000/social/search-users?q=${val}`, {
+      const res = await fetch(`${API_BASE_URL}/social/search-users?q=${val}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -46,7 +47,7 @@ export default function Friends({ user, token, socket }) {
 
   const sendFriendRequest = async (receiver) => {
     try {
-      const res = await fetch('http://localhost:3000/social/invite', {
+      const res = await fetch(`${API_BASE_URL}/social/invite`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -72,7 +73,7 @@ export default function Friends({ user, token, socket }) {
   const inviteToMatch = async (friend) => {
     try {
       // Create a casual match first
-      const matchRes = await fetch('http://localhost:3000/api/create-match', {
+      const matchRes = await fetch(`${API_BASE_URL}/api/create-match`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -89,7 +90,7 @@ export default function Friends({ user, token, socket }) {
       
       if (matchRes.ok) {
         // Send invite for this match
-        await fetch('http://localhost:3000/social/invite', {
+        await fetch(`${API_BASE_URL}/social/invite`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

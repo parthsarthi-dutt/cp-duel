@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Shield, Verified, Trophy, History as HistoryIcon, Swords, Target, Flag } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../config';
 
 export default function Dashboard({ user, setUser, token }) {
     const [handle, setHandle] = useState(user.cf_handle || '');
@@ -10,7 +11,7 @@ export default function Dashboard({ user, setUser, token }) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch('http://localhost:3000/auth/history', {
+        fetch(`${API_BASE_URL}/auth/history`, {
             headers: { Authorization: `Bearer ${token}` }
         })
         .then(res => res.json())
@@ -23,7 +24,7 @@ export default function Dashboard({ user, setUser, token }) {
         if(!handle) return;
         setLoading(true);
         try {
-            const res = await fetch('http://localhost:3000/auth/verify-cf-start', {
+            const res = await fetch(`${API_BASE_URL}/auth/verify-cf-start`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 body: JSON.stringify({ handle })
@@ -38,7 +39,7 @@ export default function Dashboard({ user, setUser, token }) {
     const checkVerification = async () => {
         setLoading(true);
         try {
-            const res = await fetch('http://localhost:3000/auth/verify-cf-check', {
+            const res = await fetch(`${API_BASE_URL}/auth/verify-cf-check`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 body: JSON.stringify({ handle })

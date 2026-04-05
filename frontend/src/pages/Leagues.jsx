@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Trophy, Plus, LogIn, Play, ArrowLeft, Crown, Award, X, UserPlus } from 'lucide-react';
 import { io } from 'socket.io-client';
+import API_BASE_URL from '../config';
 
 export default function Leagues({ token, user }) {
     const { leagueId: urlLeagueId } = useParams();
@@ -20,13 +21,13 @@ export default function Leagues({ token, user }) {
 
     const fetchLeagues = async () => {
         try {
-            const res = await fetch('http://localhost:3000/api/league/my', { headers: { Authorization: `Bearer ${token}` }});
+            const res = await fetch(`${API_BASE_URL}/api/league/my`, { headers: { Authorization: `Bearer ${token}` }});
             if(res.ok) setLeagues(await res.json());
         } catch(e) {}
     }
 
     const loadLeague = async (id) => {
-        const res = await fetch(`http://localhost:3000/api/league/${id}`, { headers: { Authorization: `Bearer ${token}` }});
+        const res = await fetch(`${API_BASE_URL}/api/league/${id}`, { headers: { Authorization: `Bearer ${token}` }});
         if(res.ok) {
             const data = await res.json();
             setActiveLeague(data);
@@ -38,10 +39,10 @@ export default function Leagues({ token, user }) {
 
     useEffect(() => {
         fetchLeagues();
-        socketRef.current = io('http://localhost:3000');
+        socketRef.current = io(API_BASE_URL, { transports: ['websocket', 'polling'] });
 
         if (token) {
-            fetch('http://localhost:3000/social/friends', {
+            fetch(`${API_BASE_URL}/social/friends`, {
                 headers: { Authorization: `Bearer ${token}` }
             })
             .then(r => r.json())
@@ -78,7 +79,7 @@ export default function Leagues({ token, user }) {
         e.preventDefault();
         if(!name) return;
         setLoading(true);
-        const res = await fetch('http://localhost:3000/api/league/create', {
+        const res = await fetch(`${API_BASE_URL}/api/league/create`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
             body: JSON.stringify({ name, timeLimit: parseInt(timeLimit), ratingMin: parseInt(ratingMin), ratingMax: parseInt(ratingMax) })
@@ -96,7 +97,7 @@ export default function Leagues({ token, user }) {
         e.preventDefault();
         if(!joinId) return;
         setLoading(true);
-        const res = await fetch('http://localhost:3000/api/league/join', {
+        const res = await fetch(`${API_BASE_URL}/api/league/join`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
             body: JSON.stringify({ leagueId: joinId })
@@ -114,7 +115,7 @@ export default function Leagues({ token, user }) {
 
     const startLeague = async (id) => {
         if(!window.confirm("Start round-robin? All current players will be matched.")) return;
-        const res = await fetch(`http://localhost:3000/api/league/${id}/start`, {
+        const res = await fetch(`${API_BASE_URL}/api/league/${id}/start`, {
             method: 'POST',
             headers: { Authorization: `Bearer ${token}` }
         });
@@ -123,14 +124,14 @@ export default function Leagues({ token, user }) {
 
     const endLeague = async (id) => {
         if(!window.confirm("End this league? Standings will be finalized.")) return;
-        const res = await fetch(`http://localhost:3000/api/league/${id}/end`, {
+        const res = await fetch(`${API_BASE_URL}/api/league/${id}/end`, {
             method: 'POST',
             headers: { Authorization: `Bearer ${token}` }
         });
     }
     const sendLeagueInvite = async (friend) => {
         try {
-            const res = await fetch('http://localhost:3000/social/invite', {
+            const res = await fetch(`${API_BASE_URL}/social/invite`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -317,7 +318,7 @@ export default function Leagues({ token, user }) {
     const hideLeague = async (e, id) => {
         e.stopPropagation();
         if(!window.confirm("Hide this league from your list?")) return;
-        const res = await fetch(`http://localhost:3000/api/league/${id}/hide`, {
+        const res = await fetch(`${API_BASE_URL}/api/league/${id}/hide`, {
             method: 'POST',
             headers: { Authorization: `Bearer ${token}` }
         });
