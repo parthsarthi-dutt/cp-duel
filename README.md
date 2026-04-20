@@ -374,8 +374,8 @@ The PostgreSQL database consists of 6 tables:
 
 ```
 ┌──────────┐     WebSocket      ┌──────────┐     HTTP Polling     ┌──────────────┐
-│  Player  │ ◄──────────────► │  Server  │ ──────────────────► │  Codeforces  │
-│ (React)  │    Socket.IO      │ (Node)   │   Submission API    │     API      │
+│  Player  │ ◄──────────────►   │  Server  │ ──────────────────►  │  Codeforces  │
+│ (React)  │    Socket.IO       │  (Node)  │   Submission API     │     API      │
 └──────────┘                    └──────────┘                      └──────────────┘
      │                               │
      │  joinRoom / toggleReady       │  Poll every 10s for new
